@@ -10,7 +10,6 @@ __pycache__/
 # Local scratch and temp folders
 scratch/
 .claude/
-.opencode/
 
 # Cache directories and ML models
 data/models/
