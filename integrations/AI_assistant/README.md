@@ -101,12 +101,31 @@ The installation and configuration of all components (System Preparation, OpenSe
    ```
    
    **Important Environment File Variables:**
-   - `DEPLOYMENT_TYPE`: Set to `"all-in-one"` (default), `"indexer"`, or `"dashboard"` depending on the node you are installing on.
-   - `WAZUH_INDEXER_IP`: Set to `127.0.0.1` if installing directly on the indexer, or its IP if distributed.
-   - `WAZUH_INDEXER_PUBLIC_IP`: The IP of your indexer server (used for PDF generation links).
-   - `WAZUH_MANAGER_IP` & `WAZUH_DASHBOARD_IP`: The IP addresses of your Wazuh Manager and Dashboard servers.
-   - `OPENAI_API_KEY` / `GEMINI_API_KEY` / AWS Credentials: Add your preferred LLM provider credentials.
-   - Update the respective `..._USER` and `..._PASS` fields with your actual Wazuh credentials.
+
+   The following table describes the variables you configure before running the installer script. The remaining variables in the file have working defaults for a single-host deployment.
+
+   | Variable | Description | Example value |
+   |---|---|---|
+   | `DEPLOYMENT_TYPE` | Defines which components the installer configures on the node. Set `"all-in-one"` for a single-host deployment, or `"indexer"` / `"dashboard"` when the Wazuh indexer and dashboard run on separate servers. | `"all-in-one"` |
+   | `WAZUH_INDEXER_IP` | IP address of the Wazuh indexer. Keep the default `127.0.0.1` when installing on the indexer node. | `"127.0.0.1"` |
+   | `WAZUH_INDEXER_PUBLIC_IP` | Reachable IP of the indexer host. Used to build the download links for generated PDF reports. | `"192.168.1.10"` |
+   | `WAZUH_INDEXER_USER` / `WAZUH_INDEXER_PASS` | Wazuh indexer credentials. | `"admin"` / `"<INDEXER_PASSWORD>"` |
+   | `WAZUH_MANAGER_IP` | IP address of the Wazuh manager. | `"127.0.0.1"` |
+   | `WAZUH_MANAGER_USER` / `WAZUH_MANAGER_PASS` | Wazuh server API credentials. | `"wazuh-wui"` / `"<MANAGER_PASSWORD>"` |
+   | `WAZUH_DASHBOARD_IP` | IP address of the Wazuh dashboard. | `"127.0.0.1"` |
+   | `WAZUH_DASHBOARD_USER` / `WAZUH_DASHBOARD_PASS` | Wazuh dashboard credentials. | `"admin"` / `"<DASHBOARD_PASSWORD>"` |
+   | `MCP_SERVER_PUBLIC_HOST` | IP address where the MCP server is reachable. | `"192.168.1.10"` |
+   | `MCP_SSE_URL` | URL of the MCP server SSE endpoint that the gateway connects to. | `"http://192.168.1.10:9900/sse"` |
+   | `GATEWAY_PUBLIC_HOST` | IP address where the ML commons connector reaches the MCP-LLM gateway. | `"192.168.1.10"` |
+   | `GATEWAY_API_KEY` | API key that authenticates requests to the gateway. Set a strong random value; the gateway does not start with the default value. | `"<STRONG_RANDOM_KEY>"` |
+   | `LLM_PROVIDER` | LLM backend used by the gateway: `"openai"`, `"gemini"`, or `"claude_bedrock"`. | `"openai"` |
+   | `OPENAI_API_KEY` | OpenAI API key. Required when `LLM_PROVIDER` is `"openai"`. | `"<YOUR_OPENAI_API_KEY>"` |
+   | `OPENAI_MODEL` | OpenAI model used by the gateway. | `"gpt-4o"` |
+   | `SMTP_HOST` / `SMTP_PORT` | SMTP server and port used to send the generated PDF reports via email. | `"smtp.gmail.com"` / `"587"` |
+   | `SMTP_USER` / `SMTP_PASS` | Sender email address and its password or app password. | `"<SENDER_EMAIL>"` / `"<APP_PASSWORD>"` |
+   | `SMTP_FROM` | From address shown on the report emails. | `"<SENDER_EMAIL>"` |
+
+   > **NOTE:** If you use Google Gemini or Amazon Bedrock instead of OpenAI, set `LLM_PROVIDER` to `"gemini"` or `"claude_bedrock"`, and configure `GEMINI_API_KEY` and `GEMINI_MODEL`, or `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, and `BEDROCK_MODEL_ID`.
 
 3. **Run the installer script** as root:
    ```bash
@@ -137,16 +156,16 @@ The script will automatically perform:
 Use these to validate end-to-end behavior and the reporting format:
 
 **Threat Hunting:**
-- Show me the alerts summary of agent 002 for the last 30 min
+- Show me the alerts summary of agent 008 for the last 30 min
 - Give me a summary of the critical alerts from the last 30 min
 - Analyze the most important alerts in my environment
 - Analyze brute force attack alerts from last 1 hour
-![alt text](images/image-5.png)
+<img src="images/alert-summary.gif" alt="Threat Hunting demo" width="800">
 
 **DQL:**
 - Filter alerts from office365 that are from outside spain in last 2 hours
 - filter all the critical virustotal alerts from agent 002 in last three hours
-![alt text](images/image-4.png)
+<img src="images/DQL.gif" alt="DQL demo" width="800">
 
 **Agent Management:**
 *(Administrative actions generate a `Pending Action` block. You must reply directly with `CONFIRM` or `NO`)*
@@ -155,20 +174,20 @@ Use these to validate end-to-end behavior and the reporting format:
 - show agent groups
 - Remove all disconnected agent from last 10 minutes
 - add agent ID 001 to the agent group windows
-![alt text](images/image-6.png)
+<img src="images/agent-management.gif" alt="Agent Management demo" width="800">
 
 **Dashboard:**
 *(Dashboard creations generate a `Pending Action` block. You must reply directly with `CONFIRM` or `NO`)*
 - create custom dashboard
 - I need a dashboard for brute force attack alerts with geo location
 - create dashboard with a pie chart top 10 rule id triggered
-![alt text](images/image-3.png)
+<img src="images/dashboard-create.gif" alt="Dashboard creation demo" width="800">
 
 **IT Hygiene:**
 - What is the OS and OS version of agent 002
 - How many agents have edge software installed?
 - Can you check if the agent 001 has Valorant software installed?
-![alt text](images/image-2.png)
+<img src="images/IT-Hygiene.gif" alt="IT Hygiene demo" width="800">
 
 **SCA:**
 - Share the SCA score of agent 002
@@ -181,25 +200,17 @@ Use these to validate end-to-end behavior and the reporting format:
 - Make a summary of critical vulnerabilities.
 - How to resolve this vulnerability CVE-2015-0287?
 - Break down the critical vulnerability and affected packages for agent 001
-![alt text](images/image.png)
+<img src="images/vulnerability-check.gif" alt="Vulnerability check demo" width="800">
 
 **Generate PDF reports and send it via Email:**
-- send a email report for endpoints brute force attack alert via mail with detailed visualizations
-- send a email report for agents vulnerabilities via mail with detailed visualizations
-![alt text](images/image-7.png)
-
-![alt text](images/image-8.png)
-
-![alt text](images/image-9.png)
+- Send a email report for endpoints brute force attack alert via mail with detailed visualizations
+- Send a PDF report for active vulnerabilities on all endpoints via email.
+<img src="images/generate-report.gif" alt="Generate PDF report demo" width="800">
 
 **Create Wazuh indexer monitor:**
 
 - Send slack alert for authentication failed attempts from India
-![alt text](images/image-10.png)
-
-![alt text](images/image-11.png)
-
-![alt text](images/image-12.png)
+<img src="images/Indexer-monitor.gif" alt="Wazuh indexer monitor demo" width="800">
 
 ---
 
