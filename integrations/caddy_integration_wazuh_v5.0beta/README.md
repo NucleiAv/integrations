@@ -86,9 +86,9 @@ A request like `GET /../../../../etc/passwd` gets caught by the path traversal r
 
 This was verified using the Wazuh 5.0 beta2 dashboard's Log test tool (Security Analytics, Log test). Custom content was authored in the Draft space and promoted to the Test space before running it against sample logs, since Draft content alone is not evaluated by Log test.
 
-Running the path traversal sample log through Log test produces a decoded event with all ECS fields populated correctly, and the Detection tab shows the corresponding rule matched, alongside the other rules evaluated against the same log.
+Running the path traversal sample log (`/../../../../etc/passwd`) through Log test produces a decoded event with all ECS fields populated correctly. The Detection tab reports 25 rules evaluated with 2 matches on that single log line, the path traversal rule (996003) and the suspicious filename rule (996020), both firing correctly against the same request.
 
-The remaining rules in `ruleset/rules/` were built the same way and follow the same pattern, each targets one field (mostly `url.original`, occasionally `user_agent.original` or `http.request.method`) with a regex modifier.
+The other 23 rules in `ruleset/rules/` were built the same way and follow the same pattern. 21 target `url.original`, 2 target `user_agent.original` (996010, 996028), and 2 target `http.request.method` (996011, 996027), each with a regex modifier.
 
 Three rules from the original Wazuh 4.x ruleset (repeated auth endpoint hits, repeated sensitive path probes, repeated path traversal attempts) rely on frequency and correlation logic across multiple events rather than a single log line, and are not included here as Sigma rules. That kind of correlation looks like it belongs in the dashboard's Detectors feature instead, which is still to be worked out and would follow in a later update.
 
