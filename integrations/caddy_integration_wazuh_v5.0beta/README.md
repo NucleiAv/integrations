@@ -90,6 +90,9 @@ Running the path traversal sample log (`/../../../../etc/passwd`) through Log te
 
 The other 23 rules in `ruleset/rules/` were built the same way and follow the same pattern. 19 target `url.original`, 2 target `user_agent.original` (996010, 996028), and 2 target `http.request.method` (996011, 996027), each with a regex modifier. Across all 25 rules, 21 target `url.original` in total.
 
+<img width="1716" height="687" alt="image" src="https://github.com/user-attachments/assets/6d090837-a63e-4877-9330-a871d861e6dd" />
+<img width="1917" height="761" alt="image" src="https://github.com/user-attachments/assets/7a51a480-6e39-4b08-8115-ff1a33db66b0" />
+
 Three rules from the original Wazuh 4.x ruleset (repeated auth endpoint hits, repeated sensitive path probes, repeated path traversal attempts) rely on frequency and correlation logic across multiple events rather than a single log line, and are not included here as Sigma rules. That kind of correlation looks like it belongs in the dashboard's Detectors feature instead, which is still to be worked out and would follow in a later update.
 
 ---
