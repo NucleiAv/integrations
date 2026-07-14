@@ -24,7 +24,7 @@ Caddy (caddyserver.com) is a modern open source web server with automatic HTTPS.
 
 ### Prerequisites
 
-* Wazuh manager 4.x, developed and tested against 4.14.5 and 4.14.6
+* Wazuh manager 4.x, developed and tested against 4.14.5
 * Caddy web server configured to write JSON access logs
 * Wazuh agent installed on the host running Caddy, or the logs forwarded to a location the manager can read
 
@@ -114,16 +114,20 @@ docker exec wazuh-test bash -c "
 docker exec -i wazuh-test /var/ossec/bin/wazuh-logtest < sample_logs.txt
 ```
 
-A sample logtest hit for the path traversal rule looks like this:
+A real logtest hit for the SQL injection rule, taken directly from a test run, looks like this:
 
 ```
 **Phase 3: Completed filtering (rules).
-       id: '996003'
-       level: '10'
-       description: 'Caddy: Path traversal attempt from 1.2.3.4'
-       groups: '['web', 'attack', 'path_traversal']'
-       firedtimes: '1'
-       mitre.id: '['T1083']'
+	id: '996004'
+	level: '10'
+	description: 'Caddy: SQL injection attempt from 10.0.0.17'
+	groups: '['caddy', 'web', 'web', 'attack', 'sql_injection']'
+	firedtimes: '1'
+	mail: 'False'
+	mitre.id: '['T1190']'
+	mitre.tactic: '['Initial Access']'
+	mitre.technique: '['Exploit Public-Facing Application']'
+**Alert to be generated.
 ```
 
 I also wrote a full test file, `caddy.ini`, for the Wazuh core ruleset testing tool (`runtests.py`), covering 26 test cases across every non frequency based rule, all passing:
@@ -146,6 +150,6 @@ Rules 996018, 996019, and 996022 are frequency based, they need multiple matchin
 
 * Original source, written from scratch against Caddy's documented JSON access log format, no third party ruleset was adapted or copied.
 * Adapted by, Anmol Vats (GitHub: NucleiAv)
-* Tested versions, Wazuh manager 4.14.5 and 4.14.6, current Caddy JSON access log format as documented at caddyserver.com/docs/logging
+* Tested versions, Wazuh manager 4.14.5, current Caddy JSON access log format as documented at caddyserver.com/docs/logging
 * Maintainer, Anmol Vats (GitHub: NucleiAv)
 * Support boundary, community maintained, provided as is
