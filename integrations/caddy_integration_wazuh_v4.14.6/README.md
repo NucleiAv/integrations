@@ -134,7 +134,7 @@ I also wrote a full test file, `caddy.ini`, for the Wazuh core ruleset testing t
 
 ```
 |          File           |  Passed  |  Failed  |  Status  |
-|./tests/caddy.ini        |    26    |    0     |    ✅     |
+|./caddy.ini              |    26    |    0     |    ✅     |
 ```
 
 Rules 996018, 996019, and 996022 are frequency based, they need multiple matching events within a time window to fire, so they were left out of the automated test file and need live traffic or a manual multi event test to trigger.

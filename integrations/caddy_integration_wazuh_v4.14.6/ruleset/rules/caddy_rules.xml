@@ -146,6 +146,26 @@
     </mitre>
   </rule>
 
+  <rule id="996018" level="14" frequency="10" timeframe="60">
+    <if_matched_sid>996005</if_matched_sid>
+    <same_field>request.remote_ip</same_field>
+    <description>Caddy: Directory enumeration detected - repeated sensitive path probes from $(request.remote_ip)</description>
+    <group>web,attack,scan,</group>
+    <mitre>
+      <id>T1595.001</id>
+    </mitre>
+  </rule>
+
+  <rule id="996019" level="14" frequency="8" timeframe="60">
+    <if_matched_sid>996003</if_matched_sid>
+    <same_field>request.remote_ip</same_field>
+    <description>Caddy: Aggressive scanning - repeated path traversal attempts from $(request.remote_ip)</description>
+    <group>web,attack,scan,</group>
+    <mitre>
+      <id>T1595.002</id>
+    </mitre>
+  </rule>
+
   <rule id="996020" level="8">
     <if_sid>996000</if_sid>
     <field name="request.uri" type="pcre2">(?i)\/(password|passwd|secret|confidential|credential|private|token|apikey|api[_-]key|auth)[^/]*(\.[a-z]{1,5})?$</field>
@@ -185,7 +205,7 @@
 
   <rule id="996024" level="12">
     <if_sid>996000</if_sid>
-    <field name="request.uri" type="pcre2">(?i)(php://|phar://|data://|expect://|zip://|glob://|file://|gopher://|dict://|\.(php|phtml|phar)\b.*=)</field>
+    <field name="request.uri" type="pcre2">(?i)(php://|phar://|data://|expect://|zip://|glob://|file://|gopher://|dict://)</field>
     <description>Caddy: LFI/RFI file inclusion attempt from $(request.remote_ip) - $(request.uri)</description>
     <group>web,attack,lfi,</group>
     <mitre>
@@ -270,26 +290,6 @@
     <group>web,recon,upload,</group>
     <mitre>
       <id>T1566.001</id>
-    </mitre>
-  </rule>
-
-  <rule id="996018" level="14" frequency="10" timeframe="60">
-    <if_matched_sid>996005</if_matched_sid>
-    <same_field>request.remote_ip</same_field>
-    <description>Caddy: Directory enumeration detected - repeated sensitive path probes from $(request.remote_ip)</description>
-    <group>web,attack,scan,</group>
-    <mitre>
-      <id>T1595.001</id>
-    </mitre>
-  </rule>
-
-  <rule id="996019" level="14" frequency="8" timeframe="60">
-    <if_matched_sid>996003</if_matched_sid>
-    <same_field>request.remote_ip</same_field>
-    <description>Caddy: Aggressive scanning - repeated path traversal attempts from $(request.remote_ip)</description>
-    <group>web,attack,brute_force,</group>
-    <mitre>
-      <id>T1110</id>
     </mitre>
   </rule>
 
