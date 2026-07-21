@@ -20,5 +20,5 @@ metadata:
     - '5.0'
 detection:
   selection:
-    user_agent.original|re: '^(\[\]|''''|-)$|^.{500,}'
+    user_agent.original|re: '^(\[\]|-|\s*)$|^.{500,}'
   condition: selection

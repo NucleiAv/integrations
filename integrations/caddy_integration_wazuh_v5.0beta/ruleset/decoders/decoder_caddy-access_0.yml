@@ -28,8 +28,8 @@ normalize:
       - destination.domain: $_tmp_json.request.host
       - http.response.status_code: $_tmp_json.status
       - http.response.body.bytes: $_tmp_json.size
-      - event.duration: $_tmp_json.duration
-      - network.protocol: $_tmp_json.request.proto
+      - network.protocol: http
+      - http.version: $_tmp_json.request.proto
       - user_agent.original: $_tmp_json.request.headers.User-Agent.0
   - check: int_less($http.response.status_code, 400)
     map:
